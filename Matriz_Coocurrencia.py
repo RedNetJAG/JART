@@ -51,3 +51,23 @@ print Coomatriz[0]
 labelslist = onlyLabels.collect()
 labels = np.array(labelslist)
 Matriz = np.c_[labels, Coomatriz]
+
+
+#Preparo los datos en túplas ((movieId1, moveId2), peso) donde peso es es el cruce de las movieIds en la Coomatriz
+
+#Túpla (movieId1, movieId2)
+mov = onlyLabels.collect()
+for x in range(len(mov)):
+    mov[x] = int(mov[x])
+movRDD = sc.parallelize(mov).zipWithIndex() 
+resultRDD = movRDD.cartesian(movRDD)
+
+#Filtro aquellas túplas con mismo movieID, y elimino duplicados
+resultRDD = resultRDD.filter(lambda (x, y): x<>y).filter(lambda (x, y): x<y)
+resul = resultRDD.collect()
+
+print resul[0], resul[0][0], result[0][0][1], resul [0][1][1], resul[1992], resul[1992][1][1]
+#print len(resultRDD.collect()), resultRDD.collect()
+
+#túplas ((movieId1, moveId2), peso)
+Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d]))

@@ -47,6 +47,7 @@ print Coomatriz[0]
 
 
 ##Unión de las id de películas con sus vectores de coocurrencia.
+##NO USADA FINALMENTE
 
 labelslist = onlyLabels.collect()
 labels = np.array(labelslist)
@@ -64,10 +65,6 @@ resultRDD = movRDD.cartesian(movRDD)
 
 #Filtro aquellas túplas con mismo movieID, y elimino duplicados
 resultRDD = resultRDD.filter(lambda (x, y): x<y)
-resul = resultRDD.collect()
-
-print resul[0], resul[0][0], result[0][0][1], resul [0][1][1], resul[1992], resul[1992][1][1]
-#print len(resultRDD.collect()), resultRDD.collect()
 
 #túplas (movieId1, moveId2, peso)
 Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d])).collect()

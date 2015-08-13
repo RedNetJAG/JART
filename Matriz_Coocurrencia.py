@@ -72,6 +72,14 @@ print resul[0], resul[0][0], result[0][0][1], resul [0][1][1], resul[1992], resu
 #túplas (movieId1, moveId2, peso)
 Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d])).collect()
 
+#Grabar datos en CSV para importar en Neo4j
+def toCSVLine(data):
+    return ','.join(str(d) for d in data)  
+
+lines = Neo4jRDD.map(toCSVLine)
+lines.saveAsTextFile('data/mydata/Relaciones')
+
+
 ###Testeo de resultados
 
 m = sc.parallelize([[0, 1, 2, 3], [4, 2, 6, 7], [8, 3, 7, 11]])

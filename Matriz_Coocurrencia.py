@@ -53,7 +53,7 @@ labels = np.array(labelslist)
 Matriz = np.c_[labels, Coomatriz]
 
 
-#Preparo los datos en túplas (movieId1, moveId2, peso) donde peso es es el cruce de las movieIds en la Coomatriz
+##Preparo los datos en túplas (movieId1, moveId2, peso) donde peso es es el cruce de las movieIds en la Coomatriz
 
 #Túpla (movieId1, movieId2)
 mov = onlyLabels.collect()
@@ -72,7 +72,7 @@ print resul[0], resul[0][0], result[0][0][1], resul [0][1][1], resul[1992], resu
 #túplas (movieId1, moveId2, peso)
 Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d])).collect()
 
-#Testeo de resultados
+###Testeo de resultados
 
 m = sc.parallelize([[0, 1, 2, 3], [4, 2, 6, 7], [8, 3, 7, 11]])
 coo = sc.parallelize([[1, 2, 3], [2, 6, 7], [3, 7, 11]])

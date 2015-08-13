@@ -53,7 +53,7 @@ labels = np.array(labelslist)
 Matriz = np.c_[labels, Coomatriz]
 
 
-#Preparo los datos en túplas ((movieId1, moveId2), peso) donde peso es es el cruce de las movieIds en la Coomatriz
+#Preparo los datos en túplas (movieId1, moveId2, peso) donde peso es es el cruce de las movieIds en la Coomatriz
 
 #Túpla (movieId1, movieId2)
 mov = onlyLabels.collect()
@@ -63,11 +63,42 @@ movRDD = sc.parallelize(mov).zipWithIndex()
 resultRDD = movRDD.cartesian(movRDD)
 
 #Filtro aquellas túplas con mismo movieID, y elimino duplicados
-resultRDD = resultRDD.filter(lambda (x, y): x<>y).filter(lambda (x, y): x<y)
+resultRDD = resultRDD.filter(lambda (x, y): x<y)
 resul = resultRDD.collect()
 
 print resul[0], resul[0][0], result[0][0][1], resul [0][1][1], resul[1992], resul[1992][1][1]
 #print len(resultRDD.collect()), resultRDD.collect()
 
-#túplas ((movieId1, moveId2), peso)
-Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d]))
+#túplas (movieId1, moveId2, peso)
+Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d])).collect()
+
+#Testeo de resultados
+
+m = sc.parallelize([[0, 1, 2, 3], [4, 2, 6, 7], [8, 3, 7, 11]])
+coo = sc.parallelize([[1, 2, 3], [2, 6, 7], [3, 7, 11]])
+l = sc.parallelize([0, 4, 8])
+print m.collect(), coo.collect(), l.collect()
+coom = np.matrix(coo.collect()) 
+print coom[0, 1]
+
+#Túpla (movieId1, movieId2)
+movtest = l.collect()
+movtestRDD = sc.parallelize(movtest).zipWithIndex() 
+resultestRDD = movtestRDD.cartesian(movtestRDD)
+r = resultestRDD.collect()
+
+#Filtro aquellas túplas con mismo movieID, y elimino duplicados
+resultestRDD = resultestRDD.filter(lambda (x, y): x<y)
+
+#túplas (movieId1, moveId2, peso)
+Neo4jRDDtest = resultestRDD.map(lambda ((a, b), (c, d)): (a, c, coom[b, d])).collect()
+
+print movtestRDD.collect()
+print r, resultestRDD.collect()
+print Neo4jRDDtest
+
+## [[0, 1, 2, 3], [4, 2, 6, 7], [8, 3, 7, 11]] [[1, 2, 3], [2, 6, 7], [3, 7, 11]] [0, 4, 8]
+## 2
+## [(0, 0), (4, 1), (8, 2)]
+## [((0, 0), (0, 0)), ((0, 0), (4, 1)), ((0, 0), (8, 2)), ((4, 1), (0, 0)), ((8, 2), (0, 0)), ((4, 1), (4, 1)), ((4, 1), (8, 2)), ((8, 2), (4, 1)), ((8, 2), (8, 2))] [((0, 0), (4, 1)), ((0, 0), (8, 2)), ((4, 1), (8, 2))]
+## [(0, 4, 2), (0, 8, 3), (4, 8, 7)]

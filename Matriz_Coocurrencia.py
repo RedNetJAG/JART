@@ -67,7 +67,7 @@ resultRDD = movRDD.cartesian(movRDD)
 resultRDD = resultRDD.filter(lambda (x, y): x<y)
 
 #túplas (movieId1, moveId2, peso)
-Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, Coomatriz[b, d])).collect()
+Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, int(Coomatriz[b, d]))).filter(lambda (a, b, c): c <> 0)
 
 #Grabar datos en CSV para importar en Neo4j
 def toCSVLine(data):

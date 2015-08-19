@@ -63,10 +63,10 @@ for x in range(len(mov)):
 movRDD = sc.parallelize(mov).zipWithIndex() 
 resultRDD = movRDD.cartesian(movRDD)
 
-#Filtro aquellas túplas con mismo movieID, y elimino duplicados
-resultRDD = resultRDD.filter(lambda (x, y): x<y)
+#Filtro aquellas túplas con mismo movieID
+resultRDD = resultRDD.filter(lambda (x, y): x<>y)
 
-#túplas (movieId1, moveId2, peso)
+#túplas (movieId1, moveId2, peso) y con peso diferente de 0
 Neo4jRDD = resultRDD.map(lambda ((a, b), (c, d)): (a, c, int(Coomatriz[b, d]))).filter(lambda (a, b, c): c <> 0)
 
 #Grabar datos en CSV para importar en Neo4j
